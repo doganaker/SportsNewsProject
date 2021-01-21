@@ -22,7 +22,6 @@ namespace SportsNewsProject.Controllers
         }
 
         [Route("")]
-        [Route("anasayfa")]
         public IActionResult Index()
         {
             MainHomeVM home = new MainHomeVM();
