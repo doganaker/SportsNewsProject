@@ -98,77 +98,90 @@
                     </div>
 
                     <div class="readers_comment">
-                        <div class="single_media_title"><h2>Related Comments</h2></div>
-                        @foreach (var item in Model.Comments)
+                        
+                        @if (ViewBag.IsAuth == false)
                         {
-                            @if (item.ParentId == 0)
+                            <div class="add_a_comment">
+                                <div class="single_media_title"><h2>Related Comments</h2></div>
+                                <div class="comment_form">
+                                    <span>Yorumları görebilmek için lütfen <a href="/register" style="color:tomato">üye ol</a> veya <a href="/login" style="color:tomato">giriş</a> yap!</span>
+                                </div><!--comment_form-->
+                            </div><!--add_a_comment-->
+                        }
+                        else
+                        {
+                            @foreach (var item in Model.Comments)
                             {
-                                <div class="media">
-                                    <div class="media-left">
-                                        <a href="#">
-                                            <img alt="64x64" class="media-object" data-src="/mainsite/assets/img/img-author1.jpg"
-                                                 src="/mainsite/assets/img/img-author1.jpg" data-holder-rendered="true">
-                                        </a>
-                                    </div>
-                                    <div class="media-body">
-                                        <h2 class="media-heading">@item.User.NickName</h2>
-                                        <p>@item.AddDate.ToString("dd MMM yyy HH:mm")</p>
-                                        @Html.Raw(item.Content)
-
-                                        <div class="comment_article_social">
-                                            <a href="javascript:void(0);" onclick="like('@item.ID','@ViewBag.email')"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i><input class="voteinp like" type="number" value="@item.Likes" id="like_@item.ID" /></a>
-                                            <a href="javascript:void(0);" onclick="dislike(@item.ID)"><i class="fa fa-thumbs-o-down" aria-hidden="true"></i><input class="voteinp dislike" type="number" value="@item.Dislikes" id="dislike_@item.ID" /></a>
-                                            <button onclick="addreply('@item.ID',true)" class="reply_ic"><span> Reply </span></button>
+                                @if (item.ParentId == 0)
+                                {
+                                    <div class="media">
+                                        <div class="media-left">
+                                            <a href="#">
+                                                <img alt="64x64" class="media-object" data-src="/mainsite/assets/img/img-author1.jpg"
+                                                     src="/mainsite/assets/img/img-author1.jpg" data-holder-rendered="true">
+                                            </a>
                                         </div>
-                                        <div id="replyform_@item.ID" style="display:none">
-                                            <div class="add_a_comment">
-                                                <div class="single_media_title"><h2>Add a Reply</h2></div>
-                                                <div class="comment_form">
-                                                    <form action="/newsdetail/reply" method="post">
-                                                        <input type="hidden" name="ID" value="@Model.ID" />
-                                                        <input type="hidden" name="parentid" value="@item.ID" />
+                                        <div class="media-body">
+                                            <h2 class="media-heading">@item.User.NickName</h2>
+                                            <p>@item.AddDate.ToString("dd MMM yyy HH:mm")</p>
+                                            @Html.Raw(item.Content)
 
-                                                        <div class="form-group">
-                                                            <input type="text" name="useremail" placeholder="Email" style="width:100%" />
-                                                        </div>
-                                                        <div class="form-group comment">
-                                                            <input type="text" name="replycomment" placeholder="Content" style="width:100%; height:80px" />
-                                                        </div>
+                                            <div class="comment_article_social">
+                                                <a href="javascript:void(0);" onclick="like('@item.ID','@ViewBag.email')"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i><input class="voteinp like" type="number" value="@item.Likes" id="like_@item.ID" /></a>
+                                                <a href="javascript:void(0);" onclick="dislike(@item.ID)"><i class="fa fa-thumbs-o-down" aria-hidden="true"></i><input class="voteinp dislike" type="number" value="@item.Dislikes" id="dislike_@item.ID" /></a>
+                                                <button onclick="addreply('@item.ID',true)" class="reply_ic"><span> Reply </span></button>
+                                            </div>
+                                            <div id="replyform_@item.ID" style="display:none">
+                                                <div class="add_a_comment">
+                                                    <div class="single_media_title"><h2>Add a Reply</h2></div>
+                                                    <div class="comment_form">
+                                                        <form action="/newsdetail/reply" method="post">
+                                                            <input type="hidden" name="ID" value="@Model.ID" />
+                                                            <input type="hidden" name="parentid" value="@item.ID" />
 
-                                                        <button type="submit" class="btn btn-submit red">Reply</button>
+                                                            <div class="form-group">
+                                                                <input type="text" name="useremail" placeholder="Email" style="width:100%" />
+                                                            </div>
+                                                            <div class="form-group comment">
+                                                                <input type="text" name="replycomment" placeholder="Content" style="width:100%; height:80px" />
+                                                            </div>
 
-                                                    </form>
-                                                </div><!--reply_form-->
-                                            </div><!--add_a_reply-->
-                                        </div>
-                                        @for (int i = 0; i < Model.Comments.Count; i++)
-                                        {
-                                            @if (item.ID == Model.Comments[i].ParentId)
+                                                            <button type="submit" class="btn btn-submit red">Reply</button>
+
+                                                        </form>
+                                                    </div><!--reply_form-->
+                                                </div><!--add_a_reply-->
+                                            </div>
+                                            @for (int i = 0; i < Model.Comments.Count; i++)
                                             {
-                                                <div class="media reply">
-                                                    <div class="media-left">
-                                                        <a href="#">
-                                                            <img alt="64x64" class="media-object" data-src="/mainsite/assets/img/img-author2.jpg"
-                                                                 src="/mainsite/assets/img/img-author2.jpg" data-holder-rendered="true">
-                                                        </a>
-                                                    </div>
-                                                    <div class="media-body">
-                                                        <h2 class="media-heading">@Model.Comments[i].User.NickName</h2>
-                                                        <p>@Model.Comments[i].AddDate.ToString("dd MMM yyy HH:mm")</p>
-                                                        @Html.Raw(Model.Comments[i].Content)
+                                                @if (item.ID == Model.Comments[i].ParentId)
+                                                {
+                                                    <div class="media reply">
+                                                        <div class="media-left">
+                                                            <a href="#">
+                                                                <img alt="64x64" class="media-object" data-src="/mainsite/assets/img/img-author2.jpg"
+                                                                     src="/mainsite/assets/img/img-author2.jpg" data-holder-rendered="true">
+                                                            </a>
+                                                        </div>
+                                                        <div class="media-body">
+                                                            <h2 class="media-heading">@Model.Comments[i].User.NickName</h2>
+                                                            <p>@Model.Comments[i].AddDate.ToString("dd MMM yyy HH:mm")</p>
+                                                            @Html.Raw(Model.Comments[i].Content)
 
-                                                        <div class="comment_article_social">
-                                                            <a href="javascript:void(0)" onclick="clike(@Model.Comments[i].ID)"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i><input class="voteinp like" type="number" value="@Model.Comments[i].Likes" id="clike_@Model.Comments[i].ID" /></a>
-                                                            <a href="javascript:void(0)" onclick="cdislike(@Model.Comments[i].ID)"><i class="fa fa-thumbs-o-down" aria-hidden="true"></i><input class="voteinp dislike" type="number" value="@Model.Comments[i].Dislikes" id="cdislike_@Model.Comments[i].ID" /></a>
+                                                            <div class="comment_article_social">
+                                                                <a href="javascript:void(0)" onclick="clike(@Model.Comments[i].ID)"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i><input class="voteinp like" type="number" value="@Model.Comments[i].Likes" id="clike_@Model.Comments[i].ID" /></a>
+                                                                <a href="javascript:void(0)" onclick="cdislike(@Model.Comments[i].ID)"><i class="fa fa-thumbs-o-down" aria-hidden="true"></i><input class="voteinp dislike" type="number" value="@Model.Comments[i].Dislikes" id="cdislike_@Model.Comments[i].ID" /></a>
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                </div>
+                                                }
                                             }
-                                        }
+                                        </div>
                                     </div>
-                                </div>
+                                }
                             }
                         }
+
                     </div><!--readers_comment-->
 
                     @if (ViewBag.IsAuth == false)
@@ -176,7 +189,7 @@
                         <div class="add_a_comment">
                             <div class="single_media_title"><h2>Add a Comment</h2></div>
                             <div class="comment_form">
-                                <span>Yorum yapabilmek için lütfen <a href="/login" style="color:tomato">giriş</a> yapınız!</span>
+                                <span>Yorum yapabilmek için lütfen <a href="/register" style="color:tomato">üye ol</a> veya <a href="/login" style="color:tomato">giriş</a> yap!</span>
                             </div><!--comment_form-->
                         </div><!--add_a_comment-->
                     }
@@ -203,7 +216,7 @@
                 </div><!--single_content_layout-->
             </div>
 
-            <div class="col-md-3">
+            <!--<div class="col-md-3">
 
                 <div class="tab sitebar">
                     <ul class="nav nav-tabs">
@@ -216,8 +229,8 @@
                             <div class="media">
                                 <div class="media-left">
                                     <a href="#"><img class="media-object" src="/mainsite/assets/img/img-list.jpg" alt="Generic placeholder image"></a>
-                                </div><!--media-left-->
-                                <div class="media-body">
+                                </div>--><!--media-left-->
+                                <!--<div class="media-body">
                                     <h3 class="media-heading"><a href="#">Spain going to made class football</a></h3>
                                     <span class="rating">
                                         <i class="fa fa-star"></i>
@@ -226,14 +239,14 @@
                                         <i class="fa fa-star"></i>
                                         <i class="fa fa-star-half-full"></i>
                                     </span>
-                                </div><!--media-body-->
-                            </div><!--media-->
+                                </div>--><!--media-body-->
+                            <!--</div>--><!--media-->
 
-                            <div class="media">
+                            <!--<div class="media">
                                 <div class="media-left">
                                     <a href="#"><img class="media-object" src="/mainsite/assets/img/img-list5.jpg" alt="Generic placeholder image"></a>
-                                </div><!--media-left-->
-                                <div class="media-body">
+                                </div>--><!--media-left-->
+                                <!--<div class="media-body">
                                     <h3 class="media-heading"><a href="#">Spain going to made class football</a></h3>
                                     <span class="rating">
                                         <i class="fa fa-star"></i>
@@ -242,14 +255,14 @@
                                         <i class="fa fa-star"></i>
                                         <i class="fa fa-star-half-full"></i>
                                     </span>
-                                </div><!--media-body-->
-                            </div><!--media-->
+                                </div>--><!--media-body-->
+                            <!--</div>--><!--media-->
 
-                            <div class="media">
+                            <!--<div class="media">
                                 <div class="media-left">
                                     <a href="#"><img class="media-object" src="/mainsite/assets/img/img-list2.jpg" alt="Generic placeholder image"></a>
-                                </div><!--media-left-->
-                                <div class="media-body">
+                                </div>--><!--media-left-->
+                                <!--<div class="media-body">
                                     <h3 class="media-heading"><a href="#">Spain going to made class football</a></h3>
                                     <span class="rating">
                                         <i class="fa fa-star"></i>
@@ -258,14 +271,14 @@
                                         <i class="fa fa-star"></i>
                                         <i class="fa fa-star-half-full"></i>
                                     </span>
-                                </div><!--media-body-->
-                            </div><!--media-->
+                                </div>--><!--media-body-->
+                            <!--</div>--><!--media-->
 
-                            <div class="media">
+                            <!--<div class="media">
                                 <div class="media-left">
                                     <a href="#"><img class="media-object" src="/mainsite/assets/img/img-list3.jpg" alt="Generic placeholder image"></a>
-                                </div><!--media-left-->
-                                <div class="media-body">
+                                </div>--><!--media-left-->
+                                <!--<div class="media-body">
                                     <h3 class="media-heading"><a href="#">Spain going to made class football</a></h3>
                                     <span class="rating">
                                         <i class="fa fa-star"></i>
@@ -274,16 +287,16 @@
                                         <i class="fa fa-star"></i>
                                         <i class="fa fa-star-half-full"></i>
                                     </span>
-                                </div><!--media-body-->
-                            </div><!--media-->
-                        </div><!--tab-pane-->
+                                </div>--><!--media-body-->
+                            <!--</div>--><!--media-->
+                        <!--</div>--><!--tab-pane-->
 
-                        <div class="tab-pane" id="2">
+                        <!--<div class="tab-pane" id="2">
                             <div class="media">
                                 <div class="media-left">
                                     <a href="#"><img class="media-object" src="/mainsite/assets/img/img-list4.jpg" alt="Generic placeholder image"></a>
-                                </div><!--media-left-->
-                                <div class="media-body">
+                                </div>--><!--media-left-->
+                                <!--<div class="media-body">
                                     <h3 class="media-heading"><a href="#">Spain going to made class football</a></h3>
                                     <span class="rating">
                                         <i class="fa fa-star"></i>
@@ -292,14 +305,14 @@
                                         <i class="fa fa-star"></i>
                                         <i class="fa fa-star-half-full"></i>
                                     </span>
-                                </div><!--media-body-->
-                            </div><!--media-->
+                                </div>--><!--media-body-->
+                            <!--</div>--><!--media-->
 
-                            <div class="media">
+                            <!--<div class="media">
                                 <div class="media-left">
                                     <a href="#"><img class="media-object" src="/mainsite/assets/img/img-list.jpg" alt="Generic placeholder image"></a>
-                                </div><!--media-left-->
-                                <div class="media-body">
+                                </div>--><!--media-left-->
+                                <!--<div class="media-body">
                                     <h3 class="media-heading"><a href="#">Spain going to made class football</a></h3>
                                     <span class="rating">
                                         <i class="fa fa-star"></i>
@@ -308,20 +321,20 @@
                                         <i class="fa fa-star"></i>
                                         <i class="fa fa-star-half-full"></i>
                                     </span>
-                                </div><!--media-body-->
-                            </div><!--media-->
-                        </div><!--tab-pane-->
-                    </div><!--tab-content-->
-                </div><!--tab-->
+                                </div>--><!--media-body-->
+                            <!--</div>--><!--media-->
+                        <!--</div>--><!--tab-pane-->
+                    <!--</div>--><!--tab-content-->
+                <!--</div>--><!--tab-->
 
-                <div class="ad">
+                <!--<div class="ad">
                     <img class="img-responsive" src="/mainsite/assets/img/img-sitebar.jpg" alt="img" />
                     <img class="img-responsive" src="/mainsite/assets/img/img-sitebar.jpg" alt="img" />
                     <img class="img-responsive" src="/mainsite/assets/img/img-sitebar.jpg" alt="img" />
                     <img class="img-responsive" src="/mainsite/assets/img/img-sitebar.jpg" alt="img" />
-                </div><!--ad-->
+                </div>--><!--ad-->
 
-                <div class="ad">
+                <!--<div class="ad">
                     <img class="img-responsive" src="/mainsite/assets/img/img-ad.jpg" alt="img" />
                 </div>
 
@@ -336,53 +349,53 @@
                     <div class="media">
                         <div class="media-left">
                             <a href="#"><img class="media-object" src="/mainsite/assets/img/img-list.jpg" alt="Generic placeholder image"></a>
-                        </div><!--media-left-->
-                        <div class="media-body">
+                        </div>--><!--media-left-->
+                        <!--<div class="media-body">
                             <h3 class="media-heading"><a href="#">Spain going to made class football</a></h3>
                             <div class="comment_box">
                                 <div class="comments_icon"> <i class="fa fa-comments" aria-hidden="true"></i></div>
                                 <div class="comments"><a href="#">9 Comments</a></div>
-                            </div><!--comment_box-->
-                        </div><!--media-body-->
-                    </div><!--media-->
-                    <div class="media">
+                            </div>--><!--comment_box-->
+                        <!--</div>--><!--media-body-->
+                    <!--</div>--><!--media-->
+                    <!--<div class="media">
                         <div class="media-left">
                             <a href="#"><img class="media-object" src="/mainsite/assets/img/img-list2.jpg" alt="Generic placeholder image"></a>
-                        </div><!--media-left-->
-                        <div class="media-body">
+                        </div>--><!--media-left-->
+                        <!--<div class="media-body">
                             <h3 class="media-heading"><a href="#">Spain going to made class football</a></h3>
                             <div class="comment_box">
                                 <div class="comments_icon"> <i class="fa fa-comments" aria-hidden="true"></i></div>
                                 <div class="comments"><a href="#">20 Comments</a></div>
-                            </div><!--comment_box-->
-                        </div><!--media-body-->
-                    </div><!--media-->
-                    <div class="media">
+                            </div>--><!--comment_box-->
+                        <!--</div>--><!--media-body-->
+                    <!--</div>--><!--media-->
+                    <!--<div class="media">
                         <div class="media-left">
                             <a href="#"><img class="media-object" src="/mainsite/assets/img/img-list3.jpg" alt="Generic placeholder image"></a>
-                        </div><!--media-left-->
-                        <div class="media-body">
+                        </div>--><!--media-left-->
+                        <!--<div class="media-body">
                             <h3 class="media-heading"><a href="#">Spain going to made class football</a></h3>
                             <div class="comment_box">
                                 <div class="comments_icon"> <i class="fa fa-comments" aria-hidden="true"></i></div>
                                 <div class="comments"><a href="#">23 Comments</a></div>
-                            </div><!--comment_box-->
-                        </div><!--media-body-->
-                    </div><!--media-->
-                    <div class="media">
+                            </div>--><!--comment_box-->
+                        <!--</div>--><!--media-body-->
+                    <!--</div>--><!--media-->
+                    <!--<div class="media">
                         <div class="media-left">
                             <a href="#"><img class="media-object" src="/mainsite/assets/img/img-list3.jpg" alt="Generic placeholder image"></a>
-                        </div><!--media-left-->
-                        <div class="media-body">
+                        </div>--><!--media-left-->
+                        <!--<div class="media-body">
                             <h3 class="media-heading"><a href="#">Spain going to made class football</a></h3>
                             <div class="comment_box">
                                 <div class="comments_icon"> <i class="fa fa-comments" aria-hidden="true"></i></div>
                                 <div class="comments"><a href="#">44 Comments</a></div>
-                            </div><!--comment_box-->
-                        </div><!--media-body-->
-                    </div><!--media-->
-                </div><!--most_comment-->
-            </div>
+                            </div>--><!--comment_box-->
+                        <!--</div>--><!--media-body-->
+                    <!--</div>--><!--media-->
+                <!--</div>--><!--most_comment-->
+            <!--</div>-->
         </div>
 </section>
 

@@ -163,7 +163,7 @@ namespace SportsNewsProject.Controllers
         public async Task<IActionResult> LogOut()
         {
             await HttpContext.SignOutAsync("UserScheme");
-            return Redirect("/anasayfa");
+            return Redirect("/");
         }
     }
 }

@@ -31,5 +31,26 @@ namespace SportsNewsProject.Controllers
             return View(home);
         }
 
+        public IActionResult Search(string search)
+        {
+            if (!string.IsNullOrEmpty(search))
+            {
+                MainBaseVM searchpage = new MainBaseVM();
+                searchpage.news = _newscontext.News.Where(q => q.Title.ToLower().Contains(search.ToLower())).OrderByDescending(q => q.AddDate).Include(q => q.Author).ToList();
+                if (searchpage.news.Count > 0)
+                {
+                    ViewBag.emptycontrol = "no";
+                }
+                
+                return View(searchpage);
+            }
+            else
+            {
+                MainBaseVM searchpage = new MainBaseVM();
+                return View(searchpage);
+            }
+            
+        }
+
     }
 }
